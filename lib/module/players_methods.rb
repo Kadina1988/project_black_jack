@@ -10,7 +10,7 @@ module PlayersMeth
     end
   end
 
-  # private
+  private
 
   def score_points
     @points = @cards[0].point + @cards[1].point if @cards.size == 2
