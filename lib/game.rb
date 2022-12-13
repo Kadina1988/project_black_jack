@@ -34,7 +34,7 @@ class Game
 
   def menu
     puts 'Menu'
-    puts '1.Попустить ход'
+    puts '1.Пропустить ход'
     puts '2.Добавить карту'
     puts '3.Открыть карты'
     puts '0.Выход'
