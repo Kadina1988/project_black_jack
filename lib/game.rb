@@ -3,15 +3,20 @@ require_relative  'deck'
 require_relative  'dealer'
 require_relative 'card'
 require_relative 'module/players_methods'
+require_relative 'bank.rb'
 
 class Game
+
+  BET = 10
+  MONEY_BANK = 20
+
   attr_reader :bank, :player, :dealer, :deck
 
   def initialize
     @dealer = Dealer.new
     @player = User.new
     @deck   = Deck.new.deck_cards
-    @bank   = 0
+    @bank   = Bank.new
   end
 
   def start
@@ -49,9 +54,9 @@ class Game
 
   def start_game
     exit if @player.bank_zero? || @dealer.bank_zero?
-    @player.bank -= 10
-    @dealer.bank -= 10
-    @bank += 20
+    @player.bank -= BET
+    @dealer.bank -= BET
+    @bank.money  += MONEY_BANK
     @deck.shuffle!
     @player.cards << @deck.shift << @deck.shift
     @dealer.cards << @deck.shift << @deck.shift
@@ -140,17 +145,17 @@ class Game
 
   def game_result
     if ((@player.points > @dealer.points) && @player.points < 21) || (@dealer.points >= 21 && @player.points < 21)
-      @player.bank += @bank
-      @bank = 0
+      @player.bank += @bank.money
+      @bank.money = 0
       puts "#{@name} win.Bank #{@player.bank}$"
     elsif (@player.points == @dealer.points) || (@player.points > 21 && @dealer.points > 21)
-      @player.bank += 0.5 * @bank
-      @dealer.bank += 0.5 * @bank
+      @player.bank += 0.5 * @bank.money
+      @dealer.bank += 0.5 * @bank.money
       @bank = 0
       puts "Draw.Bank #{@player.bank}$"
     elsif ((@dealer.points > @player.points) && @dealer.points < 21) || (@player.points >= 21 && @dealer.points < 21)
-      @dealer.bank += @bank
-      @bank = 0
+      @dealer.bank += @bank.money
+      @bank.money = 0
       puts "#{@name} loose.Bank #{@player.bank}$ "
     end
   end
